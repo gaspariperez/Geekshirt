@@ -1,0 +1,359 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Articles">
+          <Key>
+            <PropertyRef Name="ArticleID" />
+          </Key>
+          <Property Name="ArticleID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Price" Type="int" Nullable="false" />
+          <Property Name="Info" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="OrderID" />
+          </Key>
+          <Property Name="OrderID" Type="int" Nullable="false" />
+          <Property Name="UID" Type="int" Nullable="false" />
+          <Property Name="LID" Type="int" Nullable="false" />
+          <Property Name="TotalPrice" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ShopLists">
+          <Key>
+            <PropertyRef Name="ListID" />
+          </Key>
+          <Property Name="ListID" Type="int" Nullable="false" />
+          <Property Name="AID" Type="int" />
+          <Property Name="UID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserData">
+          <Key>
+            <PropertyRef Name="UID" />
+          </Key>
+          <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Adress" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="UID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserLogIn">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Orders_ToShopList">
+          <End Role="ShopLists" Type="Self.ShopLists" Multiplicity="1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ShopLists">
+              <PropertyRef Name="ListID" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="LID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_ToUserData">
+          <End Role="UserData" Type="Self.UserData" Multiplicity="1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserData">
+              <PropertyRef Name="UID" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="UID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ShopLists_ToArticles">
+          <End Role="Articles" Type="Self.Articles" Multiplicity="0..1" />
+          <End Role="ShopLists" Type="Self.ShopLists" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Articles">
+              <PropertyRef Name="ArticleID" />
+            </Principal>
+            <Dependent Role="ShopLists">
+              <PropertyRef Name="AID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ShopLists_ToUserData">
+          <End Role="UserData" Type="Self.UserData" Multiplicity="1" />
+          <End Role="ShopLists" Type="Self.ShopLists" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserData">
+              <PropertyRef Name="UID" />
+            </Principal>
+            <Dependent Role="ShopLists">
+              <PropertyRef Name="UID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserData_ToUserLogIn">
+          <End Role="UserLogIn" Type="Self.UserLogIn" Multiplicity="1" />
+          <End Role="UserData" Type="Self.UserData" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="UserLogIn">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserData">
+              <PropertyRef Name="UID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DatabaseModelStoreContainer">
+          <EntitySet Name="Articles" EntityType="Self.Articles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ShopLists" EntityType="Self.ShopLists" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserData" EntityType="Self.UserData" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserLogIn" EntityType="Self.UserLogIn" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Orders_ToShopList" Association="Self.FK_Orders_ToShopList">
+            <End Role="ShopLists" EntitySet="ShopLists" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_ToUserData" Association="Self.FK_Orders_ToUserData">
+            <End Role="UserData" EntitySet="UserData" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ShopLists_ToArticles" Association="Self.FK_ShopLists_ToArticles">
+            <End Role="Articles" EntitySet="Articles" />
+            <End Role="ShopLists" EntitySet="ShopLists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ShopLists_ToUserData" Association="Self.FK_ShopLists_ToUserData">
+            <End Role="UserData" EntitySet="UserData" />
+            <End Role="ShopLists" EntitySet="ShopLists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserData_ToUserLogIn" Association="Self.FK_UserData_ToUserLogIn">
+            <End Role="UserLogIn" EntitySet="UserLogIn" />
+            <End Role="UserData" EntitySet="UserData" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="UserData">
+          <Key>
+            <PropertyRef Name="UID" />
+          </Key>
+          <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Adress" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="UserLogIn" Relationship="Self.FK_UserData_ToUserLogIn" FromRole="UserData" ToRole="UserLogIn" />
+          <NavigationProperty Name="Orders" Relationship="DatabaseModel.FK_Orders_ToUserData" FromRole="UserData" ToRole="Orders" />
+          <NavigationProperty Name="ShopLists" Relationship="DatabaseModel.FK_ShopLists_ToUserData" FromRole="UserData" ToRole="ShopLists" />
+        </EntityType>
+        <EntityType Name="UserLogIn">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="Username" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="UserData" Relationship="Self.FK_UserData_ToUserLogIn" FromRole="UserLogIn" ToRole="UserData" />
+        </EntityType>
+        <Association Name="FK_UserData_ToUserLogIn">
+          <End Role="UserLogIn" Type="Self.UserLogIn" Multiplicity="1" />
+          <End Role="UserData" Type="Self.UserData" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="UserLogIn">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserData">
+              <PropertyRef Name="UID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DatabaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="UserData" EntityType="Self.UserData" />
+          <EntitySet Name="UserLogIn" EntityType="Self.UserLogIn" />
+          <AssociationSet Name="FK_UserData_ToUserLogIn" Association="Self.FK_UserData_ToUserLogIn">
+            <End Role="UserLogIn" EntitySet="UserLogIn" />
+            <End Role="UserData" EntitySet="UserData" />
+          </AssociationSet>
+          <EntitySet Name="Articles" EntityType="DatabaseModel.Articles" />
+          <EntitySet Name="Orders" EntityType="DatabaseModel.Orders" />
+          <EntitySet Name="ShopLists" EntityType="DatabaseModel.ShopLists" />
+          <AssociationSet Name="FK_ShopLists_ToArticles" Association="DatabaseModel.FK_ShopLists_ToArticles">
+            <End Role="Articles" EntitySet="Articles" />
+            <End Role="ShopLists" EntitySet="ShopLists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_ToShopList" Association="DatabaseModel.FK_Orders_ToShopList">
+            <End Role="ShopLists" EntitySet="ShopLists" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_ToUserData" Association="DatabaseModel.FK_Orders_ToUserData">
+            <End Role="UserData" EntitySet="UserData" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ShopLists_ToUserData" Association="DatabaseModel.FK_ShopLists_ToUserData">
+            <End Role="UserData" EntitySet="UserData" />
+            <End Role="ShopLists" EntitySet="ShopLists" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Articles">
+          <Key>
+            <PropertyRef Name="ArticleID" />
+          </Key>
+          <Property Name="ArticleID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Price" Type="Int32" Nullable="false" />
+          <Property Name="Info" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ShopLists" Relationship="DatabaseModel.FK_ShopLists_ToArticles" FromRole="Articles" ToRole="ShopLists" />
+        </EntityType>
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="OrderID" />
+          </Key>
+          <Property Name="OrderID" Type="Int32" Nullable="false" />
+          <Property Name="UID" Type="Int32" Nullable="false" />
+          <Property Name="LID" Type="Int32" Nullable="false" />
+          <Property Name="TotalPrice" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ShopLists" Relationship="DatabaseModel.FK_Orders_ToShopList" FromRole="Orders" ToRole="ShopLists" />
+          <NavigationProperty Name="UserData" Relationship="DatabaseModel.FK_Orders_ToUserData" FromRole="Orders" ToRole="UserData" />
+        </EntityType>
+        <EntityType Name="ShopLists">
+          <Key>
+            <PropertyRef Name="ListID" />
+          </Key>
+          <Property Name="ListID" Type="Int32" Nullable="false" />
+          <Property Name="AID" Type="Int32" />
+          <NavigationProperty Name="Articles" Relationship="DatabaseModel.FK_ShopLists_ToArticles" FromRole="ShopLists" ToRole="Articles" />
+          <NavigationProperty Name="Orders" Relationship="DatabaseModel.FK_Orders_ToShopList" FromRole="ShopLists" ToRole="Orders" />
+          <Property Name="UID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="UserData" Relationship="DatabaseModel.FK_ShopLists_ToUserData" FromRole="ShopLists" ToRole="UserData" />
+        </EntityType>
+        <Association Name="FK_ShopLists_ToArticles">
+          <End Type="DatabaseModel.Articles" Role="Articles" Multiplicity="0..1" />
+          <End Type="DatabaseModel.ShopLists" Role="ShopLists" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Articles">
+              <PropertyRef Name="ArticleID" />
+            </Principal>
+            <Dependent Role="ShopLists">
+              <PropertyRef Name="AID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_ToShopList">
+          <End Type="DatabaseModel.ShopLists" Role="ShopLists" Multiplicity="1" />
+          <End Type="DatabaseModel.Orders" Role="Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ShopLists">
+              <PropertyRef Name="ListID" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="LID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_ToUserData">
+          <End Type="DatabaseModel.UserData" Role="UserData" Multiplicity="1" />
+          <End Type="DatabaseModel.Orders" Role="Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserData">
+              <PropertyRef Name="UID" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="UID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ShopLists_ToUserData">
+          <End Type="DatabaseModel.UserData" Role="UserData" Multiplicity="1" />
+          <End Type="DatabaseModel.ShopLists" Role="ShopLists" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserData">
+              <PropertyRef Name="UID" />
+            </Principal>
+            <Dependent Role="ShopLists">
+              <PropertyRef Name="UID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DatabaseModelStoreContainer" CdmEntityContainer="DatabaseEntities">
+          <EntitySetMapping Name="UserData">
+            <EntityTypeMapping TypeName="DatabaseModel.UserData">
+              <MappingFragment StoreEntitySet="UserData">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Adress" ColumnName="Adress" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="UID" ColumnName="UID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserLogIn">
+            <EntityTypeMapping TypeName="DatabaseModel.UserLogIn">
+              <MappingFragment StoreEntitySet="UserLogIn">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Articles">
+            <EntityTypeMapping TypeName="DatabaseModel.Articles">
+              <MappingFragment StoreEntitySet="Articles">
+                <ScalarProperty Name="Info" ColumnName="Info" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ArticleID" ColumnName="ArticleID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="DatabaseModel.Orders">
+              <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="TotalPrice" ColumnName="TotalPrice" />
+                <ScalarProperty Name="LID" ColumnName="LID" />
+                <ScalarProperty Name="UID" ColumnName="UID" />
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ShopLists">
+            <EntityTypeMapping TypeName="DatabaseModel.ShopLists">
+              <MappingFragment StoreEntitySet="ShopLists">
+                <ScalarProperty Name="UID" ColumnName="UID" />
+                <ScalarProperty Name="AID" ColumnName="AID" />
+                <ScalarProperty Name="ListID" ColumnName="ListID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
